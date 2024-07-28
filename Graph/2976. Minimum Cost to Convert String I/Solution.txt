@@ -1,0 +1,65 @@
+Date - 7/28/2024
+
+Intuition:
+
+1. Build the directed graph:
+    graph = Hashmap
+    for each original, changed, cost:
+        connect original to change with cost.
+
+    define Dijkstra algorithm to:
+        for each char list the "changable" letter with associated costs.
+
+    call Dijkstra for each letter in source that needs to be changed.
+        save cost
+
+    return cost.
+
+Solution:
+
+class Solution:
+    def minimumCost(self, source: str, target: str, original: List[str], changed: List[str], cost: List[int]) -> int:
+        
+        graph = defaultdict(list)
+        for i in range(len(original)):
+            graph[original[i]].append((changed[i], cost[i]))
+
+        
+        def dijkstra(src):
+            heap = [src]
+            visited = set()
+            res = {}
+
+            while heap:
+                cst, cur = heapq.heappop(heap)
+                if cur in visited:
+                    continue
+                
+                visited.add(cur)
+                res[cur] = cst
+                for nei, cst2 in graph[cur]:
+                    heapq.heappush(heap, (cst + cst2, nei))
+        
+            return res
+
+        total = 0
+
+        cache = {c:dijkstra((0,c)) for c in set(source)}
+
+        for i in range(len(source)):
+            if source[i] != target[i]:
+
+                if target[i] not in cache[source[i]]:
+                    return -1
+                
+                total += cache[source[i]][target[i]]
+
+        return total
+
+
+Time Complexity:
+O((V + E) log V) for the algorithm.
+
+Space Complexity:
+O(n^2) for creating heap and Hashmap for graph.
+
