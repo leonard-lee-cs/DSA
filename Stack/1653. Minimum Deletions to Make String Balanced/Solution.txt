@@ -1,0 +1,58 @@
+Date: 7/30/2024
+
+Intuition:
+
+the idea of this problem is minimizing the cost or number of deletion need  to make the input
+string balanced all 'a' until the first 'b'
+
+in other word, when a condiction 'b' exists before 'a', we are forced to remove either a 'b' or 'a'
+to keep the string balanecd.
+
+this can be achieved by using stack.
+
+for each char in string:
+    if char == 'b':
+        push to stack:
+    if char == 'a':
+        if stack is empty:
+            continue
+        else:
+            cost += 1
+            stack.pop
+
+suppose we encounter an 'a'
+if 'b' does not exists before the current 'a', stack will be empty or the string is balanced since all
+letters before the current 'a' is either 'a' or empty.
+
+if 'b' exists before the current 'a', stack is not empty or the string is not balanced,
+since we dont meet the condition of all 'a' before all 'b'.
+So we removed the 'b' to keep the string balanced.
+
+
+Solution:
+
+class Solution:
+    def minimumDeletions(self, s: str) -> int:
+
+        stack = []
+        cost = 0
+
+        for ch in s:
+            if ch == 'b':
+                stack.append('b')
+            else:
+                if not stack:
+                    continue
+                else:
+                    cost += 1
+                    stack.pop()
+
+        return cost
+
+
+Time Complexity:
+O(N) one iteration.
+
+
+Space Complexity:
+O(N): to create the stack.
